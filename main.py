@@ -30,6 +30,10 @@ class Cleaner(object):
         while True:
             [self.t.friendships.destroy(_id=_id) for _id in self.t.friends.ids(user_id=self.user_id, count=count)['ids']]
 
+    def tweets(self, count=200):
+        count = self.__box(200, count)
+        while True:
+            [self.t.statuses.destroy(_id=data['id']) for data in self.t.statuses.user_timeline(user_id=self.user_id, count=count)]
 
     def __box(self, threshold, value):
         return 1 if value <= 0 else threshold if value > threshold else value
@@ -42,5 +46,6 @@ if __name__ == '__main__':
         'fl': c.followers,
         'fv': c.favorites,
         'fr': c.friends,
+        'tw': c.tweets
     }
     funcs.get(sys.argv[1], lambda: print('invalid arguments.({})'.format(sys.argv[1])))()
